@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <Property name="BASE_DIR" value="logback"/>
+    <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd+HH:mm:ss.SSS} [%t] %-5p %c{36} - %msg%xEx%n"/>
+
+    <appender name="FILE_ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${BASE_DIR}/info.log</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${BASE_DIR}/logback_info.%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <maxHistory>3</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>500MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="LOG_2_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${BASE_DIR}/log2.log</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${BASE_DIR}/log2.%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <maxHistory>3</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>500MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="LOG_1_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${BASE_DIR}/log1.log</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${BASE_DIR}/log1.%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <maxHistory>3</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>500MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+
+    <appender name="ASYNC_FILE_ALL" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <neverBlock>false</neverBlock>
+        <appender-ref ref="FILE_ALL"/>
+        <queueSize>2048</queueSize>
+    </appender>
+
+
+    <root level="info">
+        <appender-ref ref="ASYNC_FILE_ALL"/>
+    </root>
+
+    <logger name="LOG_1" level="info" additivity="false">
+        <appender-ref ref="LOG_1_FILE"/>
+    </logger>
+
+    <logger name="LOG_2" level="info" additivity="false">
+        <appender-ref ref="LOG_2_FILE"/>
+    </logger>
+
+
+</configuration>

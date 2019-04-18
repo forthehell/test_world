@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration monitorInterval="30" status="warn">
+
+    <!-- 日志文件目录、压缩文件目录、日志格式配置 -->
+    <properties>
+        <Property name="BASE_DIR">log4j</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd-HH:mm:ss.SSS} [%t] %-5p - %msg%xEx%n</Property>
+        <!--        <Property name="LOG_PATTERN">%m%n</Property>-->
+
+        <!--        <Property name="LOG_PATTERN">%d{${LOG_DATEFORMAT_PATTERN}} ${LOG_LEVEL_PATTERN} ${sys:PID} -&#45;&#45; [%t] %-40.40c{1.} : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>-->
+    </properties>
+
+    <Appenders>
+
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+
+
+        <!-- 打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档 -->
+        <RollingRandomAccessFile name="FILE_ALL" fileName="${BASE_DIR}/info.log" immediateFlush="false"
+                                 filePattern="${BASE_DIR}/history_info.%d{yyyy-MM-dd}.%i.gz"
+                                 bufferSize="1048576">
+
+            <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8"/>
+
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="500 MB"/>
+            </Policies>
+
+            <Filters>
+                <!-- 只记录info和warn级别信息 -->
+                <!--                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>-->
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+
+            <DefaultRolloverStrategy max="50"/>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="LOG_1_FILL" fileName="${BASE_DIR}/log1.log" immediateFlush="false"
+                                 filePattern="${BASE_DIR}/history_log1.%d{yyyy-MM-dd}.%i.zip">
+
+            <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8"/>
+
+            <Policies>
+                <!--                <TimeBasedTriggeringPolicy/>-->
+                <SizeBasedTriggeringPolicy size="500 MB"/>
+            </Policies>
+
+            <Filters>
+                <!-- 只记录info和warn级别信息 -->
+                <!--                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>-->
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="LOG_2_FILL" fileName="${BASE_DIR}/log2.log" immediateFlush="false"
+                                 filePattern="${BASE_DIR}/history_log2.%d{yyyy-MM-dd}.%i.zip">
+
+            <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8"/>
+
+            <Policies>
+                <!--                <TimeBasedTriggeringPolicy/>-->
+                <SizeBasedTriggeringPolicy size="500 MB"/>
+            </Policies>
+
+            <Filters>
+                <!-- 只记录info和warn级别信息 -->
+                <!--                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>-->
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+
+
+            <!-- 指定每天的最大压缩包个数，默认7个，超过了会覆盖之前的 -->
+            <DefaultRolloverStrategy max="50"/>
+        </RollingRandomAccessFile>
+
+        <Async name="ASYNC_FILE_ALL" includeLocation="false" bufferSize="4096">
+            <AppenderRef ref="FILE_ALL"/>
+            <DisruptorBlockingQueue spinPolicy="WAITING"/>
+        </Async>
+
+        <Async name="A_LOG_1_FILL">
+            <AppenderRef ref="LOG_1_FILL"/>
+        </Async>
+
+        <Async name="A_LOG_2_FILL">
+            <AppenderRef ref="LOG_2_FILL"/>
+        </Async>
+
+    </Appenders>
+
+    <Loggers>
+
+        <root level="info">
+            <!--            <AppenderRef ref="Console"/>-->
+        </root>
+
+        <AsyncLogger name="com.test.world" additivity="false" includeLocation="false">
+            <AppenderRef ref="ASYNC_FILE_ALL"/>
+        </AsyncLogger>
+
+
+        <logger name="LOG_1" additivity="false">
+            <AppenderRef ref="A_LOG_1_FILL"/>
+        </logger>
+
+        <logger name="LOG_2" additivity="false">
+            <AppenderRef ref="A_LOG_2_FILL"/>
+        </logger>
+
+
+    </Loggers>
+
+</configuration>

@@ -2,6 +2,7 @@ package com.test.world.log;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
@@ -30,18 +31,24 @@ public class LogApplication implements ApplicationRunner, ApplicationListener<Ap
 
 
     @Autowired
-    @Qualifier("strategy2")
+    @Qualifier("strategy1")
     private Strategy strategy;
 
 
     public static void main(String[] args) {
 //        System.setProperty("log4j2.contextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
-        System.setProperty("log4j2.asyncLoggerRingBufferSize", "1024*1024");
-        System.setProperty("log4j2.asyncLoggerWaitStrategy","Block");
+//        System.setProperty("log4j2.asyncLoggerRingBufferSize", "1024");
+//        System.setProperty("log4j2.asyncLoggerWaitStrategy", "Block");
+//        System.setProperty("log4j2.asyncQueueFullPolicy","Discard");
+//        System.setProperty("log4j2.discardThreshold","info");
+
         new SpringApplicationBuilder().listeners(new LogApplication()).sources(LogApplication.class).run(args);
     }
 
     private String warmup() {
+
+
+//        LoggerFactory.getLogger()
 
         long start = System.currentTimeMillis();
 
@@ -82,7 +89,9 @@ public class LogApplication implements ApplicationRunner, ApplicationListener<Ap
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        strategy.run(warmup());
+
+        String msg = warmup();
+        strategy.run(msg);
 
     }
 

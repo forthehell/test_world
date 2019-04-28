@@ -3,6 +3,7 @@ package com.test.world.log;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ public class Strategy2 implements Strategy {
     public static final int SIZE = 1024 * 1024;
 
     public static final Logger LOG_2 = LoggerFactory.getLogger("LOG_2");
+
+    public static final Logger LOG_2_LOG = LoggerFactory.getLogger("LOG_2_LOG");
 
 
     ExecutorService executors = Executors.newFixedThreadPool(value, new ThreadFactory() {

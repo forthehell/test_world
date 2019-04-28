@@ -36,8 +36,13 @@
                 <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
 
-            <DefaultRolloverStrategy max="50"/>
-        </RollingRandomAccessFile>
+            <DefaultRolloverStrategy max="10">
+                <Delete basePath="${BASE_DIR}" maxDepth="2">
+                    <IfFileName glob="history_*"/>
+                    <IfLastModified age="1d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>A
 
         <RollingRandomAccessFile name="LOG_1_FILL" fileName="${BASE_DIR}/log1.log" immediateFlush="false"
                                  filePattern="${BASE_DIR}/history_log1.%d{yyyy-MM-dd}.%i.zip">
@@ -78,7 +83,7 @@
             <DefaultRolloverStrategy max="50"/>
         </RollingRandomAccessFile>
 
-        <Async name="ASYNC_FILE_ALL" includeLocation="false" bufferSize="4096">
+        <Async name="ASYNC_FILE_ALL" includeLocation="false" bufferSize="4096" blocking="false">
             <AppenderRef ref="FILE_ALL"/>
             <DisruptorBlockingQueue spinPolicy="WAITING"/>
         </Async>
@@ -99,9 +104,9 @@
             <!--            <AppenderRef ref="Console"/>-->
         </root>
 
-        <AsyncLogger name="com.test.world" additivity="false" includeLocation="false">
+        <logger name="com.test.world" additivity="false" includeLocation="false">
             <AppenderRef ref="ASYNC_FILE_ALL"/>
-        </AsyncLogger>
+        </logger>
 
 
         <logger name="LOG_1" additivity="false">

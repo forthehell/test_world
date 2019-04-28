@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class Strategy1 implements Strategy {
 
-    public static final int value = 2;
+    public static final int value = 6;
     volatile long lastNum = 0;
     AtomicInteger secends = new AtomicInteger();
 
